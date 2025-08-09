@@ -1,0 +1,648 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+<title>DuoLogos - Curso Completo Grego Bíblico</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cardo&family=Inter&display=swap');
+  :root {
+    --bg:#1f1330; 
+    --gold:#d4b24a; 
+    --muted:#cfc4d0; 
+    --card:#2b1f3a;
+  }
+  html, body {
+    height:100%; margin:0; padding:0;
+    font-family: 'Inter', system-ui, -apple-system, Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient(180deg,#150a24 0%, #1f1330 100%);
+    color: var(--muted);
+    -webkit-font-smoothing: antialiased;
+  }
+  .app {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 18px 16px 30px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    display:flex; align-items:center; gap:12px;
+    margin-bottom: 20px;
+  }
+  .logo {
+    width:54px; height:54px; border-radius:12px;
+    background: linear-gradient(135deg,var(--gold),#a7852d);
+    display:flex; align-items:center; justify-content:center;
+    color:#1f1330; font-weight:700; font-size: 24px;
+    user-select:none;
+  }
+  h1 {
+    margin:0; font-size: 20px;
+  }
+  nav {
+    margin-bottom: 16px;
+    display: flex; gap: 10px; justify-content:center; flex-wrap: wrap;
+  }
+  nav button {
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: none;
+    background: var(--card);
+    color: var(--muted);
+    font-weight: 600;
+    cursor: pointer;
+    user-select:none;
+    transition: background 0.3s;
+    min-width: 110px;
+    text-align:center;
+  }
+  nav button.active, nav button:hover {
+    background: var(--gold);
+    color: #1f1330;
+    font-weight: 700;
+  }
+  main {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 18px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+    flex-grow: 1;
+    overflow-y: auto;
+  }
+  .greek-letter {
+    font-family: 'Cardo', serif;
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--gold);
+    text-align: center;
+    user-select:none;
+    margin-bottom: 12px;
+  }
+  .lesson-content {
+    font-size: 18px;
+    line-height: 1.4;
+    user-select:none;
+  }
+  ul {
+    padding-left: 18px;
+  }
+  li {
+    margin-bottom: 6px;
+  }
+  /* Botões das opções */
+  #quiz-options, #exercise-write-options, #exercise-translate-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    justify-content: center;
+    margin-top: 12px;
+  }
+  #quiz-options button, #exercise-write-options button, #exercise-translate-options button {
+    background: var(--card);
+    border: none;
+    border-radius: 12px;
+    color: var(--muted);
+    padding: 12px 18px;
+    flex: 1 1 40%;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.3s;
+    user-select:none;
+  }
+  #quiz-options button:hover, #exercise-write-options button:hover, #exercise-translate-options button:hover {
+    background: var(--gold);
+    color: #1f1330;
+  }
+  #quiz-feedback, #exercise-feedback, #translate-feedback {
+    margin-top: 18px;
+    font-weight: 700;
+    text-align: center;
+    user-select:none;
+  }
+  #quiz-reset, #exercise-reset, #translate-check, #show-hint, #show-hint-translate {
+    margin-top: 24px;
+    padding: 12px 22px;
+    background: var(--gold);
+    border: none;
+    border-radius: 14px;
+    font-weight: 700;
+    color: #1f1330;
+    cursor: pointer;
+    user-select:none;
+  }
+  #quiz-score, #exercise-score {
+    margin-top: 14px;
+    text-align: center;
+    color: #8ef08e;
+    font-weight: 700;
+    user-select:none;
+  }
+  label {
+    display: block;
+    margin-top: 14px;
+    font-weight: 600;
+  }
+  input[type=text] {
+    width: 100%;
+    padding: 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: transparent;
+    color: var(--muted);
+    font-size: 18px;
+    box-sizing: border-box;
+  }
+  button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .hint {
+    margin-top: 12px;
+    font-size: 16px;
+    color: #d4b24a;
+    font-weight: 600;
+    user-select:none;
+  }
+  /* Progress bar */
+  .progress-text {
+    margin-top: 16px; 
+    text-align:center; 
+    font-size:14px; 
+    color:#aaa;
+  }
+  /* Scroll barras para mobile */
+  main::-webkit-scrollbar {
+    width: 8px;
+  }
+  main::-webkit-scrollbar-thumb {
+    background: var(--gold);
+    border-radius: 10px;
+  }
+  main::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  /* Responsividade */
+  @media (max-width: 480px){
+    #quiz-options button, #exercise-write-options button, #exercise-translate-options button {
+      flex: 1 1 100%;
+    }
+    .app {
+      padding: 14px 12px 24px;
+    }
+    h1 {
+      font-size: 18px;
+    }
+    nav button {
+      min-width: 90px;
+      font-size: 14px;
+    }
+    .greek-letter {
+      font-size: 38px;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="app" role="main">
+    <header>
+      <div class="logo" aria-hidden="true">DL</div>
+      <h1>Curso Completo Grego Bíblico</h1>
+    </header>
+
+    <nav aria-label="Navegação do curso">
+      <button id="btn-alfabeto" class="active" aria-current="page">Alfabeto</button>
+      <button id="btn-licoes">Lições</button>
+      <button id="btn-exercicio-escrever">Exercício Escrever</button>
+      <button id="btn-exercicio-traduzir">Exercício Traduzir</button>
+      <button id="btn-quiz">Quiz do Alfabeto</button>
+    </nav>
+
+    <main id="lesson-container" tabindex="0" aria-live="polite" aria-atomic="true">
+      <!-- Conteúdo carregado aqui -->
+    </main>
+  </div>
+
+<script>
+  // Dados do curso
+  const ALFABETO_COMPLETO = [
+    {mai: 'Α', min: 'α', nome: 'Alfa'},
+    {mai: 'Β', min: 'β', nome: 'Beta'},
+    {mai: 'Γ', min: 'γ', nome: 'Gama'},
+    {mai: 'Δ', min: 'δ', nome: 'Delta'},
+    {mai: 'Ε', min: 'ε', nome: 'Epsilon'},
+    {mai: 'Ζ', min: 'ζ', nome: 'Zeta'},
+    {mai: 'Η', min: 'η', nome: 'Eta'},
+    {mai: 'Θ', min: 'θ', nome: 'Teta'},
+    {mai: 'Ι', min: 'ι', nome: 'Iota'},
+    {mai: 'Κ', min: 'κ', nome: 'Kapa'},
+    {mai: 'Λ', min: 'λ', nome: 'Lambda'},
+    {mai: 'Μ', min: 'μ', nome: 'Mi'},
+    {mai: 'Ν', min: 'ν', nome: 'Ni'},
+    {mai: 'Ξ', min: 'ξ', nome: 'Xi'},
+    {mai: 'Ο', min: 'ο', nome: 'Ómicron'},
+    {mai: 'Π', min: 'π', nome: 'Pi'},
+    {mai: 'Ρ', min: 'ρ', nome: 'Rô'},
+    {mai: 'Σ', min: 'σ', nome: 'Sigma'},
+    {mai: 'Τ', min: 'τ', nome: 'Tau'},
+    {mai: 'Υ', min: 'υ', nome: 'Ípsilon'},
+    {mai: 'Φ', min: 'φ', nome: 'Phi'},
+    {mai: 'Χ', min: 'χ', nome: 'Chi'},
+    {mai: 'Ψ', min: 'ψ', nome: 'Psi'},
+    {mai: 'Ω', min: 'ω', nome: 'Ômega'}
+  ];
+
+  // Novas lições
+  const LICOES = [
+    {
+      titulo: 'Lição 1: Alfabeto Grego',
+      texto: `Aqui estudamos o alfabeto grego, fundamental para a leitura do Novo Testamento. São 24 letras, com suas formas maiúsculas e minúsculas, além dos seus nomes.`
+    },
+    {
+      titulo: 'Lição 2: Palavras Básicas',
+      texto: `Conheça algumas palavras básicas e muito comuns no Grego Bíblico para começar a entender o vocabulário:`,
+      palavras: [
+        {grego: 'λόγος', pt: 'palavra, verbo'},
+        {grego: 'θεός', pt: 'Deus'},
+        {grego: 'ἀγάπη', pt: 'amor'},
+        {grego: 'πίστις', pt: 'fé'},
+        {grego: 'χάρις', pt: 'graça'},
+        {grego: 'ἄνθρωπος', pt: 'homem, ser humano'},
+        {grego: 'ψυχή', pt: 'alma, vida'}
+      ]
+    },
+    {
+      titulo: 'Lição 3: Frases Simples',
+      texto: `Vamos ver algumas frases simples para começar a compreender a estrutura do Grego Bíblico:`,
+      frases: [
+        {grego: 'ὁ λόγος τοῦ θεοῦ', pt: 'a palavra de Deus'},
+        {grego: 'ἀγάπη ἐστὶν ἀλήθεια', pt: 'amor é verdade'},
+        {grego: 'πίστις καὶ χάρις', pt: 'fé e graça'},
+        {grego: 'ψυχή ἀθάνατος', pt: 'alma imortal'}
+      ]
+    }
+  ];
+
+  // Exercícios com palavras para traduzir
+  const PALAVRAS_SIMPLES = [
+    {grego: 'λόγος', pt: 'palavra, verbo'},
+    {grego: 'θεός', pt: 'Deus'},
+    {grego: 'ἀγάπη', pt: 'amor'},
+    {grego: 'πίστις', pt: 'fé'},
+    {grego: 'χάρις', pt: 'graça'},
+    {grego: 'ἄνθρωπος', pt: 'homem, ser humano'},
+    {grego: 'ψυχή', pt: 'alma, vida'}
+  ];
+
+  // Estado inicial carregado do localStorage, se existir
+  let state = {
+    currentTab: 'alfabeto',
+    letterIndex: 0,
+    writeExerciseIndex: 0,
+    translateExerciseIndex: 0,
+    quizProgress: {currentIndex:0, correct:0, wrong:0}
+  };
+
+  // Função para salvar estado no localStorage
+  function saveState() {
+    localStorage.setItem('cursoGregoBiblicoState', JSON.stringify(state));
+  }
+
+  // Função para carregar estado do localStorage
+  function loadState() {
+    const saved = localStorage.getItem('cursoGregoBiblicoState');
+    if(saved){
+      try {
+        const obj = JSON.parse(saved);
+        if(obj && typeof obj === 'object'){
+          state = {...state, ...obj};
+        }
+      } catch(e) {
+        console.warn('Erro ao carregar estado do localStorage', e);
+      }
+    }
+  }
+
+  loadState();
+
+  // Elementos
+  const lessonContainer = document.getElementById('lesson-container');
+  const btnAlfabeto = document.getElementById('btn-alfabeto');
+  const btnLicoes = document.getElementById('btn-licoes');
+  const btnExEscrever = document.getElementById('btn-exercicio-escrever');
+  const btnExTraduzir = document.getElementById('btn-exercicio-traduzir');
+  const btnQuiz = document.getElementById('btn-quiz');
+
+  btnAlfabeto.onclick = () => {
+    state.currentTab = 'alfabeto';
+    state.letterIndex = 0;
+    setActiveButton(btnAlfabeto);
+    renderAlfabeto();
+    saveState();
+  };
+  btnLicoes.onclick = () => {
+    state.currentTab = 'licoes';
+    setActiveButton(btnLicoes);
+    renderLicoes();
+    saveState();
+  };
+  btnExEscrever.onclick = () => {
+    state.currentTab = 'exerc-escrever';
+    state.writeExerciseIndex = state.writeExerciseIndex ?? 0;
+    setActiveButton(btnExEscrever);
+    renderExercEscrever();
+    saveState();
+  };
+  btnExTraduzir.onclick = () => {
+    state.currentTab = 'exerc-traduzir';
+    state.translateExerciseIndex = state.translateExerciseIndex ?? 0;
+    setActiveButton(btnExTraduzir);
+    renderExercTraduzir();
+    saveState();
+  };
+  btnQuiz.onclick = () => {
+    state.currentTab = 'quiz';
+    setActiveButton(btnQuiz);
+    renderQuiz();
+    saveState();
+  };
+
+  function setActiveButton(activeBtn) {
+    [btnAlfabeto, btnLicoes, btnExEscrever, btnExTraduzir, btnQuiz].forEach(btn => {
+      if(btn === activeBtn){
+        btn.classList.add('active');
+        btn.setAttribute('aria-current', 'page');
+      } else {
+        btn.classList.remove('active');
+        btn.removeAttribute('aria-current');
+      }
+    });
+  }
+
+  // --- Renderizações ---
+
+  // Alfabeto
+  function renderAlfabeto(){
+    lessonContainer.innerHTML = `
+      <h2>Alfabeto Grego Completo</h2>
+      <ul>
+        ${ALFABETO_COMPLETO.map(l => `
+          <li><span class="greek-letter">${l.mai} ${l.min}</span> — ${l.nome}</li>
+        `).join('')}
+      </ul>
+      <p>Estude as letras e seus nomes. Quando estiver pronto, pratique nos exercícios!</p>
+    `;
+    lessonContainer.focus();
+  }
+
+  // Lições
+  function renderLicoes(){
+    let html = `<h2>Lições do Curso</h2>`;
+    LICOES.forEach((licao, idx) => {
+      html += `<section style="margin-bottom:24px;">
+        <h3>${licao.titulo}</h3>
+        <p>${licao.texto}</p>
+      `;
+      if(licao.palavras){
+        html += `<ul>`;
+        licao.palavras.forEach(p => {
+          html += `<li><span class="greek-letter">${p.grego}</span> — ${p.pt}</li>`;
+        });
+        html += `</ul>`;
+      }
+      if(licao.frases){
+        html += `<ul>`;
+        licao.frases.forEach(f => {
+          html += `<li><span class="greek-letter">${f.grego}</span> — ${f.pt}</li>`;
+        });
+        html += `</ul>`;
+      }
+      html += `</section>`;
+    });
+    lessonContainer.innerHTML = html;
+    lessonContainer.focus();
+  }
+
+  // Exercício de escrever com botão de ajuda (dica)
+  function renderExercEscrever(){
+    const letra = ALFABETO_COMPLETO[state.writeExerciseIndex];
+    lessonContainer.innerHTML = `
+      <h2>Exercício: Escreva o nome da letra</h2>
+      <div class="greek-letter" aria-label="Letra grega para identificar">${letra.mai}</div>
+      <label for="write-answer">Digite o nome da letra (ex: Alfa):</label>
+      <input type="text" id="write-answer" autocomplete="off" autocapitalize="words" spellcheck="false" aria-describedby="write-feedback" />
+      <button id="show-hint" style="margin-top:12px; padding:8px 14px; border-radius:10px; background: var(--gold); border:none; color:#1f1330; font-weight:700; cursor:pointer;">Mostrar dica</button>
+      <div id="write-hint" class="hint" aria-live="polite" style="display:none;">${letra.nome}</div>
+      <button id="write-check" style="margin-top:18px; background: var(--gold); color:#1f1330; border:none; padding: 12px 18px; font-weight:700; border-radius:14px; cursor:pointer;">Verificar</button>
+      <div id="write-feedback" role="alert" style="margin-top:16px; font-weight:700;"></div>
+      <button id="write-next" style="margin-top:24px; padding:12px 20px; border-radius:14px; background: var(--card); border:none; color: var(--muted); font-weight:700; cursor:pointer;">Próxima letra</button>
+      <div class="progress-text">Letra ${state.writeExerciseIndex + 1} de ${ALFABETO_COMPLETO.length}</div>
+    `;
+    lessonContainer.focus();
+
+    const input = document.getElementById('write-answer');
+    const btnHint = document.getElementById('show-hint');
+    const hintDiv = document.getElementById('write-hint');
+    const btnCheck = document.getElementById('write-check');
+    const feedback = document.getElementById('write-feedback');
+    const btnNext = document.getElementById('write-next');
+
+    btnHint.onclick = () => {
+      hintDiv.style.display = 'block';
+    };
+    btnCheck.onclick = () => {
+      const val = input.value.trim().toLowerCase();
+      if(!val){
+        feedback.textContent = 'Digite algo para verificar.';
+        feedback.style.color = '#ff7b7b';
+        return;
+      }
+      if(val === letra.nome.toLowerCase()){
+        feedback.textContent = '✅ Correto!';
+        feedback.style.color = '#8ef08e';
+      } else {
+        feedback.textContent = `❌ Errado! A resposta correta é: ${letra.nome}`;
+        feedback.style.color = '#ff7b7b';
+      }
+      saveState();
+    };
+    btnNext.onclick = () => {
+      state.writeExerciseIndex++;
+      if(state.writeExerciseIndex >= ALFABETO_COMPLETO.length) state.writeExerciseIndex = 0;
+      saveState();
+      renderExercEscrever();
+    };
+
+    input.addEventListener('keydown', e => {
+      if(e.key === 'Enter'){
+        btnCheck.click();
+      }
+    });
+  }
+
+  // Exercício de traduzir com dica
+  function renderExercTraduzir(){
+    const palavra = PALAVRAS_SIMPLES[state.translateExerciseIndex];
+    lessonContainer.innerHTML = `
+      <h2>Exercício: Traduza a palavra grega</h2>
+      <div class="greek-letter" aria-label="Palavra grega para traduzir">${palavra.grego}</div>
+      <label for="translate-answer">Digite a tradução em português:</label>
+      <input type="text" id="translate-answer" autocomplete="off" autocapitalize="sentences" spellcheck="false" aria-describedby="translate-feedback" />
+      <button id="show-hint-translate" style="margin-top:12px; padding:8px 14px; border-radius:10px; background: var(--gold); border:none; color:#1f1330; font-weight:700; cursor:pointer;">Mostrar dica</button>
+      <div id="translate-hint" class="hint" aria-live="polite" style="display:none;">${palavra.pt}</div>
+      <button id="translate-check" style="margin-top:18px; background: var(--gold); color:#1f1330; border:none; padding: 12px 18px; font-weight:700; border-radius:14px; cursor:pointer;">Verificar</button>
+      <div id="translate-feedback" role="alert" style="margin-top:16px; font-weight:700;"></div>
+      <button id="translate-next" style="margin-top:24px; padding:12px 20px; border-radius:14px; background: var(--card); border:none; color: var(--muted); font-weight:700; cursor:pointer;">Próxima palavra</button>
+      <div class="progress-text">Palavra ${state.translateExerciseIndex + 1} de ${PALAVRAS_SIMPLES.length}</div>
+    `;
+    lessonContainer.focus();
+
+    const input = document.getElementById('translate-answer');
+    const btnHint = document.getElementById('show-hint-translate');
+    const hintDiv = document.getElementById('translate-hint');
+    const btnCheck = document.getElementById('translate-check');
+    const feedback = document.getElementById('translate-feedback');
+    const btnNext = document.getElementById('translate-next');
+
+    btnHint.onclick = () => {
+      hintDiv.style.display = 'block';
+    };
+    btnCheck.onclick = () => {
+      const val = input.value.trim().toLowerCase();
+      if(!val){
+        feedback.textContent = 'Digite algo para verificar.';
+        feedback.style.color = '#ff7b7b';
+        return;
+      }
+      // Aceita resposta que contenha as palavras principais (split por vírgula no dado)
+      const corretas = palavra.pt.toLowerCase().split(/,|;/).map(s => s.trim());
+      const acertou = corretas.some(c => val.includes(c));
+      if(acertou){
+        feedback.textContent = '✅ Correto!';
+        feedback.style.color = '#8ef08e';
+      } else {
+        feedback.textContent = `❌ Errado! A tradução correta é: ${palavra.pt}`;
+        feedback.style.color = '#ff7b7b';
+      }
+      saveState();
+    };
+    btnNext.onclick = () => {
+      state.translateExerciseIndex++;
+      if(state.translateExerciseIndex >= PALAVRAS_SIMPLES.length) state.translateExerciseIndex = 0;
+      saveState();
+      renderExercTraduzir();
+    };
+
+    input.addEventListener('keydown', e => {
+      if(e.key === 'Enter'){
+        btnCheck.click();
+      }
+    });
+  }
+
+  // Quiz do alfabeto (nome da letra para a maiúscula mostrada)
+  function renderQuiz(){
+    // Dados para quiz
+    let quizData = [...ALFABETO_COMPLETO];
+    let currentIndex = state.quizProgress.currentIndex || 0;
+    let correctCount = state.quizProgress.correct || 0;
+    let wrongCount = state.quizProgress.wrong || 0;
+    let locked = false;
+
+    lessonContainer.innerHTML = `
+      <h2>Quiz: Identifique a letra pelo nome</h2>
+      <div id="quiz-letter" class="greek-letter" aria-live="polite"></div>
+      <div id="quiz-options" role="group" aria-label="Opções de resposta"></div>
+      <div id="quiz-feedback" role="alert"></div>
+      <button id="quiz-reset">Reiniciar Quiz</button>
+      <div id="quiz-score"></div>
+    `;
+
+    const letterEl = document.getElementById('quiz-letter');
+    const optionsEl = document.getElementById('quiz-options');
+    const feedbackEl = document.getElementById('quiz-feedback');
+    const resetBtn = document.getElementById('quiz-reset');
+    const scoreEl = document.getElementById('quiz-score');
+
+    function shuffleArray(arr){
+      for(let i = arr.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+    }
+
+    function loadQuestion(){
+      feedbackEl.textContent = '';
+      locked = false;
+      if(currentIndex >= quizData.length){
+        feedbackEl.textContent = `Quiz concluído! Acertos: ${correctCount}, Erros: ${wrongCount}`;
+        letterEl.textContent = '';
+        optionsEl.innerHTML = '';
+        scoreEl.textContent = '';
+        state.quizProgress = {currentIndex:0, correct:0, wrong:0};
+        saveState();
+        return;
+      }
+
+      const letra = quizData[currentIndex];
+      letterEl.textContent = letra.mai;
+
+      // Gerar opções: a correta + 3 erradas
+      let options = [letra.nome];
+      const nomesErrados = quizData.filter(l => l.nome !== letra.nome).map(l => l.nome);
+      shuffleArray(nomesErrados);
+      options = options.concat(nomesErrados.slice(0,3));
+      shuffleArray(options);
+
+      optionsEl.innerHTML = '';
+      options.forEach(op=>{
+        const btn = document.createElement('button');
+        btn.textContent = op;
+        btn.onclick = () => {
+          if(locked) return;
+          locked = true;
+          if(op === letra.nome){
+            feedbackEl.textContent = '✅ Correto!';
+            feedbackEl.style.color = '#8ef08e';
+            correctCount++;
+          } else {
+            feedbackEl.textContent = `❌ Errado! A resposta correta é: ${letra.nome}`;
+            feedbackEl.style.color = '#ff7b7b';
+            wrongCount++;
+          }
+          currentIndex++;
+          state.quizProgress = {currentIndex, correct: correctCount, wrong: wrongCount};
+          saveState();
+          scoreEl.textContent = `Acertos: ${correctCount} | Erros: ${wrongCount}`;
+          setTimeout(loadQuestion, 1500);
+        };
+        optionsEl.appendChild(btn);
+      });
+      scoreEl.textContent = `Acertos: ${correctCount} | Erros: ${wrongCount}`;
+    }
+
+    resetBtn.onclick = () => {
+      currentIndex = 0;
+      correctCount = 0;
+      wrongCount = 0;
+      state.quizProgress = {currentIndex:0, correct:0, wrong:0};
+      saveState();
+      loadQuestion();
+    };
+
+    loadQuestion();
+  }
+
+  // Inicializar aba atual ao carregar
+  switch(state.currentTab){
+    case 'alfabeto': btnAlfabeto.click(); break;
+    case 'licoes': btnLicoes.click(); break;
+    case 'exerc-escrever': btnExEscrever.click(); break;
+    case 'exerc-traduzir': btnExTraduzir.click(); break;
+    case 'quiz': btnQuiz.click(); break;
+    default: btnAlfabeto.click();
+  }
+</script>
+</body>
+</html>
